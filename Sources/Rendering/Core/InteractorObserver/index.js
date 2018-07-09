@@ -52,10 +52,11 @@ function vtkInteractorObserver(publicAPI, model) {
     vtkRenderWindowInteractor.handledEvents.forEach((eventName) => {
       if (publicAPI[`handle${eventName}`]) {
         model.subscribedEvents.push(
-          model.interactor[`on${eventName}`](
-            publicAPI[`handle${eventName}`],
-            model.priority
-          )
+          model.interactor[`on${eventName}`]((callData) => {
+            if (model.processEvents) {
+              publicAPI[`handle${eventName}`](callData);
+            }
+          }, model.priority)
         );
       }
     });
@@ -133,6 +134,7 @@ const DEFAULT_VALUES = {
   enabled: true,
   interactor: null,
   priority: 0.0,
+  processEvents: true,
   subscribedEvents: [],
 };
 
@@ -152,7 +154,7 @@ export function extend(publicAPI, model, initialValues = {}) {
   macro.get(publicAPI, model, ['interactor', 'enabled']);
 
   // Create get-set macros
-  macro.setGet(publicAPI, model, ['priority']);
+  macro.setGet(publicAPI, model, ['priority', 'processEvents']);
 
   // For more macro methods, see "Sources/macro.js"
 
