@@ -561,7 +561,7 @@ const DEFAULT_VALUES = {
   interactive: true,
 
   nearClippingPlaneTolerance: 0,
-  clippingRangeExpansion: 0.05,
+  clippingRangeExpansion: 0.5,
 
   erase: true,
   draw: true,
